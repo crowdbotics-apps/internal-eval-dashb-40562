@@ -68,7 +68,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'django.contrib.sites'
+    'django.contrib.sites',
 ]
 LOCAL_APPS = [
     'home',
@@ -135,9 +135,7 @@ DATABASES = {
 }
 
 if env.str("DATABASE_URL", default=None):
-    DATABASES = {
-        'default': env.db()
-    }
+    DATABASES = {'default': env.db()}
 
 
 # Password validation
@@ -178,7 +176,7 @@ MIDDLEWARE += ['whitenoise.middleware.WhiteNoiseMiddleware']
 
 AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',
-    'allauth.account.auth_backends.AuthenticationBackend'
+    'allauth.account.auth_backends.AuthenticationBackend',
 )
 
 STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
@@ -232,10 +230,7 @@ AWS_STORAGE_BUCKET_NAME = env.str("AWS_STORAGE_BUCKET_NAME", "")
 AWS_STORAGE_REGION = env.str("AWS_STORAGE_REGION", "")
 
 USE_S3 = (
-    AWS_ACCESS_KEY_ID and
-    AWS_SECRET_ACCESS_KEY and
-    AWS_STORAGE_BUCKET_NAME and
-    AWS_STORAGE_REGION
+    AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY and AWS_STORAGE_BUCKET_NAME and AWS_STORAGE_REGION
 )
 
 if USE_S3:
@@ -244,9 +239,7 @@ if USE_S3:
     AWS_DEFAULT_ACL = env.str("AWS_DEFAULT_ACL", "public-read")
     AWS_MEDIA_LOCATION = env.str("AWS_MEDIA_LOCATION", "media")
     AWS_AUTO_CREATE_BUCKET = env.bool("AWS_AUTO_CREATE_BUCKET", True)
-    DEFAULT_FILE_STORAGE = env.str(
-        "DEFAULT_FILE_STORAGE", "home.storage_backends.MediaStorage"
-    )
+    DEFAULT_FILE_STORAGE = env.str("DEFAULT_FILE_STORAGE", "home.storage_backends.MediaStorage")
 
 SPECTACULAR_SETTINGS = {
     # available SwaggerUI configuration parameters
@@ -256,7 +249,7 @@ SPECTACULAR_SETTINGS = {
         "persistAuthorization": True,
         "displayOperationId": True,
     },
-    "SERVE_PERMISSIONS": ["rest_framework.permissions.IsAuthenticated"],\
+    "SERVE_PERMISSIONS": ["rest_framework.permissions.IsAuthenticated"],
     "TITLE": "internal_eval_dashb_40562 API",
     "DESCRIPTION": "API documentation for internal_eval_dashb_40562 App",
     "VERSION": "v1",
@@ -265,11 +258,13 @@ SPECTACULAR_SETTINGS = {
 if DEBUG or not (EMAIL_HOST_USER and EMAIL_HOST_PASSWORD):
     # output email to console instead of sending
     if not DEBUG:
-        logging.warning("You should setup `SENDGRID_USERNAME` and `SENDGRID_PASSWORD` env vars to send emails.")
+        logging.warning(
+            "You should setup `SENDGRID_USERNAME` and `SENDGRID_PASSWORD` env vars to send emails."
+        )
     EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 
 
-# GCP config 
+# GCP config
 def google_service_account_config():
     # base64 encoded service_account.json file
     service_account_config = env.str("GS_CREDENTIALS", "")
@@ -279,11 +274,19 @@ def google_service_account_config():
         return json.loads(base64.b64decode(service_account_config))
     except (binascii.Error, ValueError):
         return {}
+
+
 GOOGLE_SERVICE_ACCOUNT_CONFIG = google_service_account_config()
 if GOOGLE_SERVICE_ACCOUNT_CONFIG:
-    GS_CREDENTIALS = service_account.Credentials.from_service_account_info(GOOGLE_SERVICE_ACCOUNT_CONFIG)
+    GS_CREDENTIALS = service_account.Credentials.from_service_account_info(
+        GOOGLE_SERVICE_ACCOUNT_CONFIG
+    )
 GS_BUCKET_NAME = env.str("GS_BUCKET_NAME", "")
 if GS_BUCKET_NAME:
     DEFAULT_FILE_STORAGE = "storages.backends.gcloud.GoogleCloudStorage"
     STATICFILES_STORAGE = "storages.backends.gcloud.GoogleCloudStorage"
     GS_DEFAULT_ACL = "publicRead"
+
+
+GOOGLE_SERVICE_ACCOUNT = env.json("SERVICE_ACCOUNT", "")
+SPREADSHEET_ID = env.str("SID", "")

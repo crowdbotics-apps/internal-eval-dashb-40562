@@ -7,13 +7,14 @@ services:
       args:
         SECRET_KEY: ${SECRET_KEY}
     env_file: .env
+    restart: always
     volumes:
       - ./:/opt/webapp
     ports:
       - "8000:${PORT}"
   postgres:
     environment:
-      POSTGRES_PASSWORD: <postgres_pwd>
+      POSTGRES_PASSWORD: jrpvk0kdtdu3f5
     volumes:
       - postgres-data:/var/lib/postgresql/data
     ports:
