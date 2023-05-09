@@ -12,4 +12,5 @@ router.register("login", LoginViewSet, basename="login")
 
 urlpatterns = [
     path("", include(router.urls)),
+    path("sheets/", include("googlesheets.api.v1.urls")),
 ]
